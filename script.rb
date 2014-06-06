@@ -4,9 +4,10 @@ require 'rexml/document'
 require 'open-uri'
 require 'mysql'
 require 'pg'
-# require 'mongo'
+require 'mongo'
 
 include REXML
+include Mongo
 
 # MySQL
 
@@ -53,6 +54,13 @@ class PostgresDirect
   end
 end
 
+
+#MongoDB
+
+db = Connection.new.db('nsampledb')
+posts = db.collection('urls')
+
+
 # Main function
 def main
 
@@ -83,7 +91,8 @@ def main
 			p.addurl(i, "#{ e.text }")
 		
 			# Insert into MongoDB
-			#
+			new_post = { :loc => "#{ e.text }" }
+      		post_id = posts.insert(new_post)
 
 			i=i+1 # Update ID token
 		}
